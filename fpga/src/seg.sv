@@ -1,11 +1,3 @@
-module led(
-    input logic s[3:0]
-    output logic led[1:0]
-);
-    assign led[0] = ~(s[1] ^ s[0])
-    assign led[1] = ~(s[3] & s[2])
-endmodule
-
 module seg(
     input logic s[3:0]
     output logic seg[6:0]
@@ -29,37 +21,4 @@ module seg(
         4b'1111: assign seg = 7b'0111000
         default : assign seg = 7b'1111111
     endcase
-endmodule
-
-module top(
-	input 	logic	mcu_blink_in,
-    input   logic   s[3:0],
-	output 	logic fpga_blink_out, mcu_echo_led
-);
-
-	logic int_osc;
-	logic pulse;
-	logic led_state = 0;
-	logic [24:0] counter = 0;
-	
-	// Internal high-speed oscillator
-	HSOSC hf_osc (.CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(int_osc));
-	
-	// Simple clock divider
-	always_ff @(posedge int_osc)
-		begin
-			counter <= counter + 1;
-		end
-	
-    // logic for first 2 leds 
-    logic leds[1:0];
-    led(s, leds);
-
-    //logic for seven segment display
-    logic seg[6:0];
-    seg(s, seg);
-
-  assign fpga_blink_out = counter[24];
-	assign mcu_echo_led = mcu_blink_in;
-
 endmodule

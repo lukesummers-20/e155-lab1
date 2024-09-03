@@ -24,7 +24,7 @@ Purpose : Generic application start
 */
 
 int main(void) {
-  
+
 }
 
 /*************************** End of file ****************************/

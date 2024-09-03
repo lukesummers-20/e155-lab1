@@ -1,5 +1,5 @@
 module led(
-    input logic s[3:0]
+    input logic s[3:0],
     output logic led[1:0]
 );
     assign led[0] = ~(s[1] ^ s[0])
@@ -7,7 +7,7 @@ module led(
 endmodule
 
 module seg(
-    input logic s[3:0]
+    input logic s[3:0],
     output logic seg[6:0]
 );
     case(s)
@@ -32,15 +32,14 @@ module seg(
 endmodule
 
 module top(
-	input 	logic	mcu_blink_in,
     input   logic   s[3:0],
-	output 	logic fpga_blink_out, mcu_echo_led
+	output 	logic   sevseg[6:0],
+    output  logic   ledOut[2:0]
 );
 
 	logic int_osc;
-	logic pulse;
 	logic led_state = 0;
-	logic [24:0] counter = 0;
+	logic [25:0] counter = 0;
 	
 	// Internal high-speed oscillator
 	HSOSC hf_osc (.CLKHFPU(1'b1), .CLKHFEN(1'b1), .CLKHF(int_osc));
@@ -49,6 +48,10 @@ module top(
 	always_ff @(posedge int_osc)
 		begin
 			counter <= counter + 1;
+            if (counter == 20000000) begin
+                led_state <= ~led_state;
+                counter <= 0;
+            end
 		end
 	
     // logic for first 2 leds 
@@ -59,7 +62,8 @@ module top(
     logic seg[6:0];
     seg(s, seg);
 
-  assign fpga_blink_out = counter[24];
-	assign mcu_echo_led = mcu_blink_in;
+    assign ledOut[1:0] = leds;
+    assign ledOut[2] = led_state;
+    assign sevseg = seg;
 
 endmodule

@@ -32,5 +32,5 @@ assign ledOut[1] = ~(s[3] & s[4]);
 logic [6:0] seg;
 seg(s, seg);
 assign sevseg = seg;
-
+  
 endmodule

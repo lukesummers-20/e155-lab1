@@ -1,6 +1,7 @@
 // Luke Summers lsummers@g.hmc.edu 9/5/24
 // module for blinking LED at 2.4 Hz
 module twoPointFourHzLed(
+	input  logic  reset,
     output logic  ledOut
 );
     logic intOsc;

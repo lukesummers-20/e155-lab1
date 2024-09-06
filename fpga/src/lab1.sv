@@ -8,7 +8,7 @@ module lab1(
     output  logic   [2:0] ledOut
 );
 	//Blink LED at 2.4Hz
-	twoPointFourHzLed blinkingLed(ledOut[2]);
+	twoPointFourHzLed blinkingLed(reset, ledOut[2]);
 
 	// logic for first 2 leds
 	assign ledOut[0] = s[1] ^ s[0];
